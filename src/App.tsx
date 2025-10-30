@@ -4,8 +4,9 @@ import { NFeProvider } from './context/NFeContext';
 import { FormularioCliente } from './components/FormularioCliente';
 import { ListaClientes } from './components/ListaClientes';
 import { FormularioNFe } from './components/FormularioNFe';
+import { ListaNFe } from './components/ListaNFe';
 import type { Cliente } from './types/Cliente';
-import './App.css'; // opcional para estilos globais
+import './App.css';
 
 function App() {
   const [clienteEditando, setClienteEditando] = useState<Cliente | null>(null);
@@ -27,6 +28,7 @@ function App() {
           <section className="nfe-section">
             <h2>Preenchimento de NFe</h2>
             <FormularioNFe onSalvar={(nfe) => console.log('NFe salva:', nfe)} />
+            <ListaNFe />
           </section>
         </main>
       </NFeProvider>
