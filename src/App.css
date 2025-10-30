@@ -1,0 +1,20 @@
+.app-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.cliente-section,
+.nfe-section {
+  margin-bottom: 48px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+h2 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
