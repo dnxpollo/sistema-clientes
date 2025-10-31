@@ -1,0 +1,29 @@
+.navbar {
+  position: sticky;
+  justify-content: center;
+  top: 0;
+  background-color: #333;
+  padding: 12px;
+  display: flex;
+  gap: 16px;
+  border-radius: 1.2rem;
+  z-index: 1000;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+.navbar a.ativo {
+  background-color: #00bcd4;
+  color: black;
+}
+
