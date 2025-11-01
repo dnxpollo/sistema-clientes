@@ -10,6 +10,12 @@
   z-index: 1000;
 }
 
+.logo {
+  height: 40px;
+  object-fit: contain;
+}
+
+
 .navbar a {
   color: white;
   text-decoration: none;
