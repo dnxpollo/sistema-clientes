@@ -1,0 +1,15 @@
+:root {
+  --primary-color: #007bff;
+  --primary-dark: #0056b3;
+  --background-color: #f4f6f8;
+  --input-bg: #ffffff;
+  --error-color: #e63946;
+  --border-color: #000000c2;
+  --font-main: 'Inter', sans-serif;
+  --input-error: #df2929;
+  --form-box-shadow: #DCDCDC;
+  --input-box-shadow: #6f9dcfb4;
+  --border-input: #ccc;
+  --background-footer: #333;
+  --activate-navbar: #00bcd4;
+}

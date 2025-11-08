@@ -1,10 +1,10 @@
 .footer {
-  background-color: #333;
+  background-color: var(--background-footer);
   color: white;
   text-align: center;
-  padding: 16px;
-  font-size: 14px;
-  margin-top: 40px;
-  border-top: 1px solid #444;
-  border-radius: 4px;
+  margin: ;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  margin-top: 3rem;
+  border-radius: 0.4rem;
 }

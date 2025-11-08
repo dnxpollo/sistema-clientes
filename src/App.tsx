@@ -7,8 +7,8 @@ import { FormularioNFe } from './components/FormularioNFe';
 import { ListaNFe } from './components/ListaNFe';
 import { NavBar } from './components/NavBar';
 import type { Cliente } from './types/Cliente';
-import { Header } from './components/Header';
 import './App.css';
+import './components/theme.css';
 import { Footer } from './components/Footer';
 
 function App() {
@@ -18,7 +18,6 @@ function App() {
     <ClienteProvider>
       <NFeProvider>
         <main className="app-container">
-          <Header/>
           <NavBar />
           <h1>Sistema de Clientes</h1>
 

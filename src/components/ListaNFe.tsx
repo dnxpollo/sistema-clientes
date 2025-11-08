@@ -14,7 +14,6 @@ export function ListaNFe() {
 
   return (
     <div className="lista-nfe">
-      <h2>Notas Fiscais Emitidas</h2>
       {nfes.length === 0 ? (
         <p>Nenhuma nota fiscal cadastrada.</p>
       ) : (

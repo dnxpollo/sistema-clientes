@@ -1,20 +1,25 @@
 .navbar {
-  position: sticky;
+  position:sticky;
   justify-content: center;
   top: 0;
-  background-color: #333;
-  padding: 12px;
+  background-color: var(--background-footer);
+  padding: 0.4rem;
   display: flex;
-  gap: 16px;
+  gap: 1.6rem;
   border-radius: 1.2rem;
   z-index: 1000;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo {
-  height: 40px;
-  object-fit: contain;
+  height: 1.6rem;
+  object-fit:cover;
 }
 
+.logo-link {
+  padding: 0;
+}
 
 .navbar a {
   color: white;
