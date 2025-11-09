@@ -3,7 +3,8 @@ import './NavBar.css';
 import logo from '../assets/logo.png';
 
 export function NavBar() {
-  const [ativo, setAtivo] = useState('');
+  const [ativo, setAtivo] = useState<string>('');
+  const [menuAberto, setMenuAberto] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,19 +22,28 @@ export function NavBar() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // inicial
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <nav className="navbar">
-      <a href="#topo" className="logo-link">
-        <img src={logo} alt="Logo da empresa" className="logo" />
-      </a>
-      <a href="#cadastro-cliente" className={ativo === 'cadastro-cliente' ? 'ativo' : ''}>Cadastro de Cliente</a>
-      <a href="#lista-clientes" className={ativo === 'lista-clientes' ? 'ativo' : ''}>Lista de Clientes</a>
-      <a href="#form-nfe" className={ativo === 'form-nfe' ? 'ativo' : ''}>Preencher NFe</a>
-      <a href="#lista-nfe" className={ativo === 'lista-nfe' ? 'ativo' : ''}>Notas Fiscais</a>
+      <div className="navbar-left">
+        <a href="#topo" className="logo-link">
+          <img src={logo} alt="Logo da empresa" className="logo" />
+        </a>
+      </div>
+
+      <div className={`nav-links ${menuAberto ? 'ativo' : ''}`}>
+        <a href="#cadastro-cliente" className={ativo === 'cadastro-cliente' ? 'ativo' : ''}>Cadastro de Cliente</a>
+        <a href="#lista-clientes" className={ativo === 'lista-clientes' ? 'ativo' : ''}>Lista de Clientes</a>
+        <a href="#form-nfe" className={ativo === 'form-nfe' ? 'ativo' : ''}>Preencher NFe</a>
+        <a href="#lista-nfe" className={ativo === 'lista-nfe' ? 'ativo' : ''}>Notas Fiscais</a>
+      </div>
+
+      <button className="menu-toggle" onClick={() => setMenuAberto(!menuAberto)}>
+        ☰
+      </button>
     </nav>
   );
 }

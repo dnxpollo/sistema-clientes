@@ -1,24 +1,48 @@
+/* Container principal */
 .navbar {
-  position:sticky;
-  justify-content: center;
-  top: 0;
-  background-color: var(--background-footer);
-  padding: 0.4rem;
   display: flex;
-  gap: 1.6rem;
-  border-radius: 1.2rem;
-  z-index: 1000;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0.4rem 1rem;
+  background-color: var(--background-footer);
+  border-radius: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
+/* Logo à esquerda */
+/* .navbar-left {
+  flex: 1;
+} */
+
 .logo {
-  height: 1.6rem;
-  object-fit:cover;
+  max-height: 1.6rem;
+  object-fit: contain;
+  float: left;
 }
 
 .logo-link {
   padding: 0;
+}
+
+/* Botão hamburguer */
+.menu-toggle {
+  display: none;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* Links centralizados */
+.nav-links {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
 }
 
 .navbar a {
@@ -34,7 +58,31 @@
 }
 
 .navbar a.ativo {
-  background-color: #00bcd4;
+  background-color: var(--activate-navbar);
   color: black;
 }
 
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu-toggle {
+    display: block;
+    align-self: flex-end;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.4rem;
+    justify-content: flex-start;
+  }
+
+  .nav-links.ativo {
+    display: flex;
+  }
+}
