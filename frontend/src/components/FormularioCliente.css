@@ -61,3 +61,16 @@ button:hover {
 button:active {
   transform: scale(0.98);
 }
+
+.loader {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #555;
+}
+.erro {
+  color: red;
+  font-size: 0.9rem;
+}
+input.erro {
+  border: 1px solid red;
+}

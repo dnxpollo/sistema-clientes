@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { ClienteContext } from '../context/ClienteContext';
 import type { Cliente } from '../types/Cliente';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 import './FormularioCliente.css';
 
 interface FormularioClienteProps {
@@ -24,6 +25,7 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
   const [email, setEmail] = useState('');
   const [endereco, setEndereco] = useState('');
   const [erros, setErros] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (clienteEditando) {
@@ -60,9 +62,27 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
     return Object.keys(novosErros).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetarCampos = () => {
+    setNome('');
+    setMatricula('');
+    setDataNascimento('');
+    setDataVencimento('');
+    setResponsavelFinanceiro('');
+    setCpfResponsavel('');
+    setValor('');
+    setFormaPagamento('');
+    setTelefone('');
+    setEmail('');
+    setEndereco('');
+    setErros({});
+    setClienteEditando(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validarCampos()) return;
+
+    setIsLoading(true);
 
     const clienteFinal: Cliente = {
       id: clienteEditando?.id || uuidv4(),
@@ -80,29 +100,31 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
       dataCadastro: clienteEditando?.dataCadastro || new Date().toISOString(),
     };
 
-    if (clienteEditando) {
-      editarCliente(clienteFinal);
-    } else {
-      adicionarCliente(clienteFinal);
+    try {
+      if (clienteEditando) {
+        editarCliente(clienteFinal);
+        toast.success('Cliente atualizado com sucesso!');
+      } else {
+        adicionarCliente(clienteFinal);
+        toast.success('Cliente cadastrado com sucesso!');
+      }
+      resetarCampos();
+    } catch (error) {
+      toast.error('Erro ao salvar cliente!');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    setNome('');
-    setMatricula('');
-    setDataNascimento('');
-    setDataVencimento('');
-    setResponsavelFinanceiro('');
-    setCpfResponsavel('');
-    setValor('');
-    setFormaPagamento('');
-    setTelefone('');
-    setEmail('');
-    setEndereco('');
-    setErros({});
-    setClienteEditando(null);
+  const getBotaoTexto = () => {
+    if (isLoading) return 'Processando...';
+    return clienteEditando ? 'Atualizar' : 'Cadastrar';
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {isLoading && <div className="loader">Salvando cliente...</div>}
+
       <label>Nome</label>
       <input value={nome} onChange={(e) => setNome(e.target.value)} className={erros.nome ? 'erro' : ''} />
       {erros.nome && <span className="erro">{erros.nome}</span>}
@@ -112,11 +134,11 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
       {erros.matricula && <span className="erro">{erros.matricula}</span>}
 
       <label>Data de Nascimento</label>
-      <input value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} type="date" className={erros.dataNascimento ? 'erro' : ''} />
+      <input type="date" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} className={erros.dataNascimento ? 'erro' : ''} />
       {erros.dataNascimento && <span className="erro">{erros.dataNascimento}</span>}
 
       <label>Data de Vencimento</label>
-      <input value={dataVencimento} onChange={(e) => setDataVencimento(e.target.value)} type="date" className={erros.dataVencimento ? 'erro' : ''} />
+      <input type="date" value={dataVencimento} onChange={(e) => setDataVencimento(e.target.value)} className={erros.dataVencimento ? 'erro' : ''} />
       {erros.dataVencimento && <span className="erro">{erros.dataVencimento}</span>}
 
       <label>Responsável Financeiro</label>
@@ -128,7 +150,7 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
       {erros.cpfResponsavel && <span className="erro">{erros.cpfResponsavel}</span>}
 
       <label>Valor</label>
-      <input value={valor} onChange={(e) => setValor(e.target.value)} type="number" className={erros.valor ? 'erro' : ''} />
+      <input type="number" value={valor} onChange={(e) => setValor(e.target.value)} className={erros.valor ? 'erro' : ''} />
       {erros.valor && <span className="erro">{erros.valor}</span>}
 
       <label>Forma de Pagamento</label>
@@ -147,7 +169,9 @@ export function FormularioCliente({ clienteEditando, setClienteEditando }: Formu
       <input value={endereco} onChange={(e) => setEndereco(e.target.value)} className={erros.endereco ? 'erro' : ''} />
       {erros.endereco && <span className="erro">{erros.endereco}</span>}
 
-      <button type="submit">{clienteEditando ? 'Atualizar' : 'Cadastrar'}</button>
+      <button type="submit" disabled={isLoading}>
+        {getBotaoTexto()}
+      </button>
     </form>
   );
 }

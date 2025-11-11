@@ -9,6 +9,8 @@ import { NavBar } from './components/NavBar';
 import type { Cliente } from './types/Cliente';
 import './App.css';
 import './components/theme.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Footer } from './components/Footer';
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
               clienteEditando={clienteEditando}
               setClienteEditando={setClienteEditando}
             />
+            <ToastContainer />
           </section>
 
           <section id="lista-clientes" className="cliente-section">

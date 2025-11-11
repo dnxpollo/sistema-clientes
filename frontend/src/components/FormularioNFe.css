@@ -52,3 +52,18 @@ input:focus {
 .lista-produtos li {
   margin-bottom: 4px;
 }
+
+.loader {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.erro {
+  color: red;
+  font-size: 0.9rem;
+}
+
+input.erro, select.erro {
+  border: 1px solid red;
+}

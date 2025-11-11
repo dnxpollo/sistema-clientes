@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { ClienteContext } from '../context/ClienteContext';
 import type { Produto, NFe } from '../types/NFe';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 import './FormularioNFe.css';
 
 interface FormularioNFeProps {
@@ -21,9 +22,14 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
     quantidade: 1,
     valorUnitario: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [erros, setErros] = useState<{ [key: string]: string }>({});
 
   const adicionarProduto = () => {
-    if (!novoProduto.nome || novoProduto.quantidade <= 0 || novoProduto.valorUnitario <= 0) return;
+    if (!novoProduto.nome || novoProduto.quantidade <= 0 || novoProduto.valorUnitario <= 0) {
+      toast.error('Preencha corretamente os dados do produto');
+      return;
+    }
     setProdutos([...produtos, novoProduto]);
     setNovoProduto({ nome: '', quantidade: 1, valorUnitario: 0 });
   };
@@ -33,9 +39,36 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
     0
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validarCampos = () => {
+    const novosErros: { [key: string]: string } = {};
+    if (!clienteId) novosErros.clienteId = 'Cliente é obrigatório';
+    if (!cnpjEmitente.trim()) novosErros.cnpjEmitente = 'CNPJ é obrigatório';
+    if (!formaPagamento.trim()) novosErros.formaPagamento = 'Forma de pagamento é obrigatória';
+    if (!dataEmissao.trim()) novosErros.dataEmissao = 'Data de emissão é obrigatória';
+    if (produtos.length === 0) novosErros.produtos = 'Adicione pelo menos um produto';
+
+    setErros(novosErros);
+    return Object.keys(novosErros).length === 0;
+  };
+
+  const resetarCampos = () => {
+    setClienteId('');
+    setCnpjEmitente('');
+    setFormaPagamento('');
+    setDataEmissao('');
+    setProdutos([]);
+    setNovoProduto({ nome: '', quantidade: 1, valorUnitario: 0 });
+    setErros({});
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clienteId || !cnpjEmitente || !formaPagamento || !dataEmissao || produtos.length === 0) return;
+    if (!validarCampos()) {
+      toast.error('Preencha todos os campos obrigatórios');
+      return;
+    }
+
+    setIsLoading(true);
 
     const novaNFe: NFe = {
       id: uuidv4(),
@@ -47,20 +80,23 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
       dataEmissao,
     };
 
-    onSalvar(novaNFe);
-
-    // Resetar campos
-    setClienteId('');
-    setCnpjEmitente('');
-    setFormaPagamento('');
-    setDataEmissao('');
-    setProdutos([]);
+    try {
+      onSalvar(novaNFe);
+      toast.success('Nota fiscal salva com sucesso!');
+      resetarCampos();
+    } catch (error) {
+      toast.error('Erro ao salvar nota fiscal');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="form-nfe">
+      {isLoading && <div className="loader">Salvando nota fiscal...</div>}
+
       <label>Cliente</label>
-      <select value={clienteId} onChange={(e) => setClienteId(e.target.value)}>
+      <select value={clienteId} onChange={(e) => setClienteId(e.target.value)} className={erros.clienteId ? 'erro' : ''}>
         <option value="">Selecione um cliente</option>
         {clientes.map((c) => (
           <option key={c.id} value={c.id}>
@@ -68,15 +104,19 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
           </option>
         ))}
       </select>
+      {erros.clienteId && <span className="erro">{erros.clienteId}</span>}
 
       <label>CNPJ do Emitente</label>
-      <input value={cnpjEmitente} onChange={(e) => setCnpjEmitente(e.target.value)} />
+      <input value={cnpjEmitente} onChange={(e) => setCnpjEmitente(e.target.value)} className={erros.cnpjEmitente ? 'erro' : ''} />
+      {erros.cnpjEmitente && <span className="erro">{erros.cnpjEmitente}</span>}
 
       <label>Forma de Pagamento</label>
-      <input value={formaPagamento} onChange={(e) => setFormaPagamento(e.target.value)} />
+      <input value={formaPagamento} onChange={(e) => setFormaPagamento(e.target.value)} className={erros.formaPagamento ? 'erro' : ''} />
+      {erros.formaPagamento && <span className="erro">{erros.formaPagamento}</span>}
 
       <label>Data de Emissão</label>
-      <input type="date" value={dataEmissao} onChange={(e) => setDataEmissao(e.target.value)} />
+      <input type="date" value={dataEmissao} onChange={(e) => setDataEmissao(e.target.value)} className={erros.dataEmissao ? 'erro' : ''} />
+      {erros.dataEmissao && <span className="erro">{erros.dataEmissao}</span>}
 
       <label>Produtos</label>
       <div className="produto-form">
@@ -99,6 +139,7 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
         />
         <button type="button" onClick={adicionarProduto}>Adicionar Produto</button>
       </div>
+      {erros.produtos && <span className="erro">{erros.produtos}</span>}
 
       <ul className="lista-produtos">
         {produtos.map((p, index) => (
@@ -110,7 +151,9 @@ export function FormularioNFe({ onSalvar }: FormularioNFeProps) {
 
       <p><strong>Valor Total:</strong> R${valorTotal.toFixed(2)}</p>
 
-      <button type="submit">Salvar NFe</button>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Processando...' : 'Salvar NFe'}
+      </button>
     </form>
   );
 }
